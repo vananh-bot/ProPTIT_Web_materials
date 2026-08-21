@@ -103,3 +103,9 @@ Bảng sẽ có dạng:
 | `student_id` | `INT`            | `PRIMARY KEY` |
 | `name`       | `VARCHAR(100)`   | —             |
 | `age`        | `INT`            | —             |
+
+
+
+
+port localhost 
+cách để tương tác với nhau 

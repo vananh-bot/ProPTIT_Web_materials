@@ -31,12 +31,12 @@ Nếu thiết kế sai ngay từ đầu, hệ thống sẽ gặp các vấn đ�
 ### 1.3. Các bước thiết kế CSDL cơ bản
 
 1. **Khảo sát yêu cầu nghiệp vụ** — xác định hệ thống cần quản lý những đối tượng gì (khách hàng, bàn, đơn đặt...).
-2. **Xác định thực thể (Entity) và thuộc tính (Attribute)** — ví dụ: Khách hàng có các thuộc tính: mã KH, tên, SĐT, email.
-3. **Xác định mối quan hệ (Relationship)** giữa các thực thể — ví dụ: 1 khách hàng có thể có nhiều lượt đặt bàn.
+2. **Xác định thực thể và thuộc tính** — ví dụ: Khách hàng có các thuộc tính: mã KH, tên, SĐT, email.
+3. **Xác định mối quan hệ** giữa các thực thể — ví dụ: 1 khách hàng có thể có nhiều lượt đặt bàn.
 4. **Vẽ lược đồ E-R (Entity-Relationship Diagram).**
 5. **Chuyển lược đồ E-R sang mô hình quan hệ** (các bảng, khóa chính, khóa ngoại).
 6. **Chuẩn hóa dữ liệu** (1NF, 2NF, 3NF...) để loại bỏ dư thừa.
-7. **Cài đặt vật lý (Physical Design):** viết lệnh `CREATE TABLE`, chọn kiểu dữ liệu, ràng buộc...
+7. **Cài đặt vật lý:** viết lệnh `CREATE TABLE`, chọn kiểu dữ liệu, ràng buộc...
 
 ---
 
@@ -54,20 +54,20 @@ Nếu thiết kế sai ngay từ đầu, hệ thống sẽ gặp các vấn đ�
 
 ### 2.2. Các loại thuộc tính
 
-- **Thuộc tính đơn (Simple):** không chia nhỏ được — VD: tuổi.
-- **Thuộc tính phức hợp (Composite):** chia được thành nhiều phần — VD: địa chỉ = số nhà + đường + thành phố.
-- **Thuộc tính đa trị (Multivalued):** có thể có nhiều giá trị — VD: 1 khách hàng có thể có nhiều số điện thoại. Ký hiệu: elip đôi.
-- **Thuộc tính suy diễn (Derived):** tính được từ thuộc tính khác — VD: tuổi tính từ ngày sinh. Ký hiệu: elip nét đứt.
+- **Thuộc tính đơn:** không chia nhỏ được — VD: tuổi.
+- **Thuộc tính phức hợp:** chia được thành nhiều phần — VD: địa chỉ = số nhà + đường + thành phố.
+- **Thuộc tính đa trị:** có thể có nhiều giá trị — VD: 1 khách hàng có thể có nhiều số điện thoại. Ký hiệu: elip đôi.
+- **Thuộc tính suy diễn:** tính được từ thuộc tính khác — VD: tuổi tính từ ngày sinh. Ký hiệu: elip nét đứt.
 
-### 2.3. Bậc của mối quan hệ (Cardinality)
+### 2.3. Bậc của mối quan hệ 
 
 Bậc thể hiện **số lượng thực thể tham gia tối đa** vào một mối quan hệ:
 
 | Loại | Ý nghĩa | Ví dụ |
 |---|---|---|
-| **1-1 (một-một)** | 1 thực thể A liên kết với đúng 1 thực thể B | 1 người có đúng 1 CCCD |
-| **1-N (một-nhiều)** | 1 thực thể A liên kết với nhiều thực thể B | 1 khách hàng có thể có **nhiều** lượt đặt bàn |
-| **N-N (nhiều-nhiều)** | Nhiều A liên kết với nhiều B | 1 sản phẩm có thể xuất hiện trong nhiều đơn hàng, 1 đơn hàng có nhiều sản phẩm |
+| **1-1** | 1 thực thể A liên kết với đúng 1 thực thể B | 1 người có đúng 1 CCCD |
+| **1-N** | 1 thực thể A liên kết với nhiều thực thể B | 1 khách hàng có thể có **nhiều** lượt đặt bàn |
+| **N-N** | Nhiều A liên kết với nhiều B | 1 sản phẩm có thể xuất hiện trong nhiều đơn hàng, 1 đơn hàng có nhiều sản phẩm |
 
 **Ví dụ minh họa E-R cho hệ thống đặt bàn nhà hàng:**
 
@@ -85,7 +85,7 @@ Là thực thể **không có khóa chính riêng**, phải phụ thuộc vào 1
 
 ---
 
-## 3. Mô hình dữ liệu quan hệ (Relational Data Model)
+## 3. Mô hình dữ liệu quan hệ
 
 ### 3.1. Khái niệm cơ bản
 
@@ -95,7 +95,7 @@ Mô hình quan hệ biểu diễn dữ liệu dưới dạng các **bảng (tabl
 - **Cột (Column / Attribute / Field):** một thuộc tính của dữ liệu.
 - **Miền giá trị (Domain):** tập giá trị hợp lệ mà 1 cột có thể nhận (VD: cột "giới tính" chỉ nhận "Nam"/"Nữ").
 
-### 3.2. Khóa (Key)
+### 3.2. Khóa
 
 | Loại khóa | Định nghĩa | Ví dụ |
 |---|---|---|
@@ -104,7 +104,7 @@ Mô hình quan hệ biểu diễn dữ liệu dưới dạng các **bảng (tabl
 | **Khóa dự tuyển (Candidate Key)** | Các cột có khả năng làm khóa chính (VD: cả `customer_id` và `email` đều có thể làm PK vì đều duy nhất) | |
 | **Siêu khóa (Super Key)** | Tập hợp cột (có thể dư) vẫn đảm bảo xác định duy nhất 1 dòng | `{customer_id, phone}` |
 
-**Ví dụ minh họa 3 bảng đã tạo ở phần trước:**
+**Ví dụ minh họa 3 bảng:**
 
 ```
 Customer (customer_id [PK], customer_name, phone, email, address)
@@ -115,11 +115,11 @@ Reservation (reservation_id [PK], customer_id [FK → Customer], table_id [FK �
 
 → `customer_id` và `table_id` trong bảng `Reservation` là **khóa ngoại**, giúp biết lượt đặt đó là của khách nào, đặt bàn nào — mà không cần lặp lại toàn bộ thông tin khách hàng/bàn vào bảng Reservation.
 
-### 3.3. Các ràng buộc toàn vẹn (Integrity Constraints)
+### 3.3. Các ràng buộc toàn vẹn
 
-- **Ràng buộc thực thể (Entity Integrity):** khóa chính không được NULL.
-- **Ràng buộc tham chiếu (Referential Integrity):** giá trị khóa ngoại phải tồn tại trong bảng được tham chiếu (VD: `customer_id` trong Reservation phải là 1 `customer_id` có thật trong bảng Customer).
-- **Ràng buộc miền giá trị (Domain Constraint):** dữ liệu nhập vào phải đúng kiểu, đúng phạm vi cho phép (VD: `number_of_guests` phải > 0).
+- **Ràng buộc thực thể:** khóa chính không được NULL.
+- **Ràng buộc tham chiếu:** giá trị khóa ngoại phải tồn tại trong bảng được tham chiếu (VD: `customer_id` trong Reservation phải là 1 `customer_id` có thật trong bảng Customer).
+- **Ràng buộc miền giá trị:** dữ liệu nhập vào phải đúng kiểu, đúng phạm vi cho phép (VD: `number_of_guests` phải > 0).
 
 ### 3.4. Chuyển từ E-R sang mô hình quan hệ (quy tắc nhanh)
 
@@ -190,7 +190,7 @@ OrderDetail (order_id [FK], product_id [FK], quantity)
 
 **Điều kiện:**
 1. Đã đạt 2NF.
-2. Không có **phụ thuộc bắc cầu (Transitive Dependency)** — nghĩa là thuộc tính không khóa không được phụ thuộc vào 1 thuộc tính không khóa khác, mà chỉ được phụ thuộc trực tiếp vào khóa chính.
+2. Không có **phụ thuộc bắc cầu** — nghĩa là thuộc tính không khóa không được phụ thuộc vào 1 thuộc tính không khóa khác, mà chỉ được phụ thuộc trực tiếp vào khóa chính.
 
 **Ví dụ VI PHẠM 3NF:** Bảng `Reservation` gộp thêm thông tin nhà hàng:
 
@@ -226,11 +226,3 @@ Reservation (reservation_id [PK], customer_id [FK], restaurant_id [FK], ...)
 
 Đây chính là lý do vì sao nên tách 3 bảng riêng thay vì gộp chung — nó đảm bảo dữ liệu không dư thừa và tránh các lỗi khi cập nhật/xóa dữ liệu.
 
----
-
-## 5. Tóm tắt nhanh trước buổi học
-
-- **Thiết kế CSDL** = quy trình xác định thực thể → vẽ E-R → chuyển sang bảng quan hệ → chuẩn hóa → cài đặt.
-- **E-R diagram**: thực thể (chữ nhật), thuộc tính (elip), quan hệ (hình thoi), chú ý bậc quan hệ 1-1, 1-N, N-N.
-- **Mô hình quan hệ**: dữ liệu là các bảng, khóa chính xác định duy nhất 1 dòng, khóa ngoại dùng để liên kết bảng.
-- **Chuẩn hóa**: 1NF (giá trị nguyên tố) → 2NF (phụ thuộc toàn bộ khóa) → 3NF (không phụ thuộc bắc cầu) — mục tiêu cuối cùng là **giảm dư thừa, tránh bất thường dữ liệu**.

@@ -1,7 +1,5 @@
 # BUỔI 3: SQL Cơ Bản
 
-Tài liệu này tổng hợp các thao tác nền tảng trong SQL. Mỗi phần đều theo cấu trúc: **cú pháp tổng quát → giải thích ý nghĩa từng thành phần → ví dụ minh họa**. Chúng ta sẽ dùng chung 2 bảng dữ liệu mẫu xuyên suốt tài liệu:
-
 **Bảng `nhan_vien`**
 
 | id | ho_ten      | phong_ban | luong    | tuoi |

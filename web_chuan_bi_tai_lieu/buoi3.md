@@ -1,5 +1,6 @@
-# [BUỔI 3] SQL cơ bản
+# BUỔI 3: SQL Cơ Bản
 
+Tài liệu này tổng hợp các thao tác nền tảng trong SQL. Mỗi phần đều theo cấu trúc: **cú pháp tổng quát → giải thích ý nghĩa từng thành phần → ví dụ minh họa**. Chúng ta sẽ dùng chung 2 bảng dữ liệu mẫu xuyên suốt tài liệu:
 
 **Bảng `nhan_vien`**
 
@@ -26,7 +27,18 @@
 
 ### 1.1. SELECT — Truy vấn dữ liệu
 
-Dùng để lấy dữ liệu từ một hoặc nhiều bảng.
+**Cấu trúc tổng quát:**
+
+```sql
+SELECT cot1, cot2, ...
+FROM ten_bang;
+```
+
+**Giải thích:**
+- `SELECT cot1, cot2, ...`: liệt kê các cột muốn lấy ra. Nếu muốn lấy tất cả các cột, dùng dấu `*` thay vì tên cột.
+- `FROM ten_bang`: chỉ định bảng nguồn chứa dữ liệu cần truy vấn.
+
+**Ví dụ:**
 
 ```sql
 -- Lấy tất cả các cột
@@ -46,6 +58,19 @@ Kết quả câu thứ 2:
 
 ### 1.2. INSERT — Thêm dữ liệu mới
 
+**Cấu trúc tổng quát:**
+
+```sql
+INSERT INTO ten_bang (cot1, cot2, ...)
+VALUES (gia_tri1, gia_tri2, ...);
+```
+
+**Giải thích:**
+- `INSERT INTO ten_bang (cot1, cot2, ...)`: chỉ định bảng và danh sách các cột sẽ được gán giá trị.
+- `VALUES (gia_tri1, gia_tri2, ...)`: các giá trị tương ứng theo đúng thứ tự với danh sách cột ở trên. Nếu bỏ qua một cột, cột đó sẽ nhận giá trị mặc định hoặc `NULL`.
+
+**Ví dụ:**
+
 ```sql
 INSERT INTO nhan_vien (id, ho_ten, phong_ban, luong, tuoi)
 VALUES (6, 'Vũ Giang', 'Marketing', 13000000, 27);
@@ -55,6 +80,21 @@ VALUES (6, 'Vũ Giang', 'Marketing', 13000000, 27);
 
 ### 1.3. UPDATE — Cập nhật dữ liệu
 
+**Cấu trúc tổng quát:**
+
+```sql
+UPDATE ten_bang
+SET cot1 = gia_tri_moi1, cot2 = gia_tri_moi2, ...
+WHERE dieu_kien;
+```
+
+**Giải thích:**
+- `UPDATE ten_bang`: chỉ định bảng cần sửa dữ liệu.
+- `SET cot = gia_tri_moi`: gán giá trị mới cho các cột cần cập nhật.
+- `WHERE dieu_kien`: xác định những dòng nào sẽ bị ảnh hưởng. **Bắt buộc phải có** nếu không toàn bộ các dòng trong bảng sẽ bị cập nhật.
+
+**Ví dụ:**
+
 ```sql
 -- Tăng lương 10% cho nhân viên phòng Kỹ thuật
 UPDATE nhan_vien
@@ -62,9 +102,20 @@ SET luong = luong * 1.1
 WHERE phong_ban = 'Kỹ thuật';
 ```
 
-**Lưu ý quan trọng:** Luôn có `WHERE` khi UPDATE, nếu không toàn bộ các dòng trong bảng sẽ bị cập nhật.
-
 ### 1.4. DELETE — Xóa dữ liệu
+
+**Cấu trúc tổng quát:**
+
+```sql
+DELETE FROM ten_bang
+WHERE dieu_kien;
+```
+
+**Giải thích:**
+- `DELETE FROM ten_bang`: chỉ định bảng cần xóa dữ liệu.
+- `WHERE dieu_kien`: xác định những dòng nào sẽ bị xóa. Tương tự UPDATE, thiếu `WHERE` sẽ xóa toàn bộ dữ liệu trong bảng.
+
+**Ví dụ:**
 
 ```sql
 -- Xóa nhân viên có id = 6
@@ -72,11 +123,20 @@ DELETE FROM nhan_vien
 WHERE id = 6;
 ```
 
-**Lưu ý:** Tương tự UPDATE, thiếu `WHERE` sẽ xóa toàn bộ dữ liệu trong bảng.
-
 ### 1.5. Từ khóa AS — Đặt bí danh (alias)
 
-Dùng để đổi tên cột hoặc bảng trong kết quả trả về, giúp dễ đọc hơn.
+**Cấu trúc tổng quát:**
+
+```sql
+SELECT cot AS ten_moi
+FROM ten_bang AS bi_danh_bang;
+```
+
+**Giải thích:**
+- `cot AS ten_moi`: đổi tên hiển thị của cột trong kết quả trả về (không đổi tên cột thật trong bảng).
+- `ten_bang AS bi_danh_bang`: đặt tên tắt (bí danh) cho bảng, thường dùng khi câu lệnh có nhiều bảng để viết ngắn gọn hơn. Từ khóa `AS` có thể lược bỏ (viết trực tiếp `ten_bang bi_danh_bang`) mà vẫn hợp lệ.
+
+**Ví dụ:**
 
 ```sql
 SELECT ho_ten AS "Họ và tên", luong AS "Lương (VNĐ)"
@@ -90,6 +150,18 @@ Kết quả:
 | Nguyễn An  | 15000000    |
 
 ### 1.6. DISTINCT — Loại bỏ giá trị trùng lặp
+
+**Cấu trúc tổng quát:**
+
+```sql
+SELECT DISTINCT cot1, cot2, ...
+FROM ten_bang;
+```
+
+**Giải thích:**
+- `DISTINCT` đặt ngay sau `SELECT`, áp dụng cho toàn bộ danh sách cột phía sau nó: chỉ giữ lại các **tổ hợp giá trị duy nhất**, loại bỏ những dòng bị trùng hoàn toàn.
+
+**Ví dụ:**
 
 ```sql
 -- Liệt kê danh sách các phòng ban (không trùng)
@@ -112,7 +184,19 @@ Nếu không có `DISTINCT`, "Kinh doanh" sẽ xuất hiện 2 lần (vì có 2 
 
 ### 2.1. WHERE — Lọc dòng trước khi nhóm
 
-`WHERE` áp dụng cho **từng dòng dữ liệu gốc**, thực thi trước khi nhóm (GROUP BY).
+**Cấu trúc tổng quát:**
+
+```sql
+SELECT cot1, cot2, ...
+FROM ten_bang
+WHERE dieu_kien;
+```
+
+**Giải thích:**
+- `WHERE dieu_kien`: áp dụng cho **từng dòng dữ liệu gốc**, thực thi trước khi nhóm (GROUP BY). Dòng nào không thỏa điều kiện sẽ bị loại bỏ trước khi các bước xử lý tiếp theo diễn ra.
+- Có thể kết hợp nhiều điều kiện bằng `AND`, `OR`, và dùng các toán tử so sánh (`=`, `>`, `<`, `<>`, `LIKE`, `IN`, `BETWEEN`...).
+
+**Ví dụ:**
 
 ```sql
 -- Lấy nhân viên có lương >= 15 triệu
@@ -121,7 +205,7 @@ FROM nhan_vien
 WHERE luong >= 15000000;
 ```
 
-Có thể kết hợp nhiều điều kiện:
+Kết hợp nhiều điều kiện:
 
 ```sql
 SELECT ho_ten
@@ -131,7 +215,19 @@ WHERE phong_ban = 'Kỹ thuật' AND tuoi < 30;
 
 ### 2.2. HAVING — Lọc sau khi nhóm
 
-`HAVING` dùng để lọc trên **kết quả đã được nhóm** (thường đi kèm hàm tổng hợp như SUM, COUNT...).
+**Cấu trúc tổng quát:**
+
+```sql
+SELECT cot_nhom, ham_tong_hop(cot)
+FROM ten_bang
+GROUP BY cot_nhom
+HAVING dieu_kien_tren_ham_tong_hop;
+```
+
+**Giải thích:**
+- `HAVING` luôn đi sau `GROUP BY`, dùng để lọc trên **kết quả đã được nhóm** — thường là điều kiện liên quan đến hàm tổng hợp (`SUM`, `COUNT`, `AVG`...) mà `WHERE` không làm được vì `WHERE` chạy trước khi dữ liệu được nhóm.
+
+**Ví dụ:**
 
 ```sql
 -- Lấy các phòng ban có tổng quỹ lương > 25 triệu
@@ -156,6 +252,20 @@ Kết quả:
 
 ### 3.1. INNER JOIN — Chỉ lấy dòng khớp ở cả 2 bảng
 
+**Cấu trúc tổng quát:**
+
+```sql
+SELECT bang1.cot, bang2.cot
+FROM bang1
+INNER JOIN bang2 ON bang1.cot_chung = bang2.cot_chung;
+```
+
+**Giải thích:**
+- `INNER JOIN bang2`: kết hợp bảng hiện tại với `bang2`.
+- `ON bang1.cot_chung = bang2.cot_chung`: điều kiện khớp nối — chỉ những dòng có giá trị trùng khớp ở cả 2 bảng mới xuất hiện trong kết quả. Dòng nào không khớp ở một trong hai bảng sẽ bị loại bỏ hoàn toàn.
+
+**Ví dụ:**
+
 ```sql
 SELECT nv.ho_ten, pb.ten_pb
 FROM nhan_vien nv
@@ -165,6 +275,20 @@ INNER JOIN phong_ban pb ON nv.phong_ban = pb.ten_pb;
 Kết quả: chỉ những nhân viên có phòng ban tồn tại trong bảng `phong_ban` mới xuất hiện (phòng "Marketing" không có nhân viên nên không ảnh hưởng ở đây).
 
 ### 3.2. LEFT JOIN — Giữ toàn bộ bảng bên trái
+
+**Cấu trúc tổng quát:**
+
+```sql
+SELECT bang1.cot, bang2.cot
+FROM bang1
+LEFT JOIN bang2 ON bang1.cot_chung = bang2.cot_chung;
+```
+
+**Giải thích:**
+- Giữ **toàn bộ** các dòng của bảng bên trái (`bang1`), dù có khớp với `bang2` hay không.
+- Nếu một dòng ở `bang1` không tìm được dòng khớp bên `bang2`, các cột lấy từ `bang2` sẽ nhận giá trị `NULL`.
+
+**Ví dụ:**
 
 ```sql
 SELECT pb.ten_pb, nv.ho_ten
@@ -187,7 +311,19 @@ Phòng "Marketing" vẫn xuất hiện dù không có nhân viên nào, vì `LEF
 
 ### 3.3. UNION — Gộp kết quả của 2 truy vấn
 
-`UNION` gộp theo chiều dọc, yêu cầu 2 truy vấn có cùng số cột và kiểu dữ liệu tương ứng. `UNION` tự loại bỏ trùng lặp, còn `UNION ALL` thì giữ nguyên tất cả (kể cả trùng).
+**Cấu trúc tổng quát:**
+
+```sql
+SELECT cot1, cot2 FROM bang1 WHERE dieu_kien1
+UNION
+SELECT cot1, cot2 FROM bang2 WHERE dieu_kien2;
+```
+
+**Giải thích:**
+- `UNION` gộp kết quả theo **chiều dọc** (nối thêm dòng), yêu cầu 2 truy vấn có **cùng số lượng cột** và **kiểu dữ liệu tương ứng** ở từng vị trí cột.
+- `UNION` tự động loại bỏ các dòng trùng lặp; nếu muốn giữ nguyên tất cả (kể cả trùng), dùng `UNION ALL`.
+
+**Ví dụ:**
 
 ```sql
 SELECT ho_ten FROM nhan_vien WHERE phong_ban = 'Kinh doanh'
@@ -210,6 +346,22 @@ Kết quả (không trùng lặp dù Nguyễn An thỏa cả 2 điều kiện):
 
 ### 4.1. Các hàm tổng hợp (Aggregate Functions)
 
+**Cấu trúc tổng quát:**
+
+```sql
+SELECT COUNT(cot), SUM(cot), AVG(cot), MAX(cot), MIN(cot)
+FROM ten_bang;
+```
+
+**Giải thích:**
+- `COUNT(cot)`: đếm số dòng có giá trị khác `NULL` ở cột đó (`COUNT(*)` đếm toàn bộ số dòng).
+- `SUM(cot)`: tính tổng giá trị của cột (chỉ dùng cho cột số).
+- `AVG(cot)`: tính giá trị trung bình.
+- `MAX(cot)` / `MIN(cot)`: lấy giá trị lớn nhất / nhỏ nhất.
+- Khi không có `GROUP BY`, các hàm này tính trên **toàn bộ bảng** và trả về đúng 1 dòng kết quả duy nhất.
+
+**Ví dụ:**
+
 ```sql
 SELECT
     COUNT(*) AS so_luong_nv,
@@ -228,6 +380,20 @@ Kết quả:
 
 ### 4.2. GROUP BY — Nhóm dữ liệu theo cột
 
+**Cấu trúc tổng quát:**
+
+```sql
+SELECT cot_nhom, ham_tong_hop(cot)
+FROM ten_bang
+GROUP BY cot_nhom;
+```
+
+**Giải thích:**
+- `GROUP BY cot_nhom`: gom các dòng có cùng giá trị ở `cot_nhom` thành một nhóm; hàm tổng hợp phía trên sẽ tính riêng cho từng nhóm thay vì toàn bảng.
+- **Quy tắc quan trọng:** mọi cột xuất hiện trong `SELECT` mà không nằm trong hàm tổng hợp thì bắt buộc phải có trong `GROUP BY`.
+
+**Ví dụ:**
+
 ```sql
 SELECT phong_ban, COUNT(*) AS so_nv, AVG(luong) AS luong_tb
 FROM nhan_vien
@@ -242,13 +408,25 @@ Kết quả:
 | Kỹ thuật   | 2     | 19000000   |
 | Nhân sự    | 1     | 12000000   |
 
-**Quy tắc quan trọng:** Mọi cột xuất hiện trong `SELECT` mà không nằm trong hàm tổng hợp thì bắt buộc phải có trong `GROUP BY`.
-
 ---
 
 ## 5. Truy vấn con (Subquery)
 
 ### 5.1. Subquery trong WHERE
+
+**Cấu trúc tổng quát:**
+
+```sql
+SELECT cot1, cot2
+FROM ten_bang
+WHERE cot SO_SANH (SELECT ham_tong_hop(cot) FROM ten_bang_khac);
+```
+
+**Giải thích:**
+- Truy vấn con (nằm trong dấu ngoặc đơn) được thực thi **trước**, trả về một giá trị đơn (hoặc danh sách giá trị) để truy vấn ngoài dùng làm điều kiện lọc.
+- Loại subquery này thường trả về **một giá trị duy nhất** khi dùng với toán tử so sánh (`=`, `>`, `<`...).
+
+**Ví dụ:**
 
 ```sql
 -- Lấy nhân viên có lương cao hơn mức lương trung bình
@@ -260,6 +438,22 @@ WHERE luong > (SELECT AVG(luong) FROM nhan_vien);
 Truy vấn con `(SELECT AVG(luong) FROM nhan_vien)` được tính trước, trả về giá trị `16000000`, sau đó truy vấn ngoài sẽ lọc các nhân viên có lương lớn hơn giá trị đó.
 
 ### 5.2. Subquery trong FROM (bảng tạm)
+
+**Cấu trúc tổng quát:**
+
+```sql
+SELECT cot1, cot2
+FROM (
+    SELECT ... FROM ten_bang ...
+) AS bang_tam
+WHERE dieu_kien;
+```
+
+**Giải thích:**
+- Truy vấn con được đặt ngay trong mệnh đề `FROM`, đóng vai trò như một **bảng tạm thời** (không lưu trữ thật) để truy vấn ngoài tiếp tục xử lý.
+- Bắt buộc phải đặt bí danh (`AS bang_tam`) cho bảng tạm này.
+
+**Ví dụ:**
 
 ```sql
 SELECT phong_ban, luong_tb
@@ -273,6 +467,19 @@ WHERE luong_tb > 14000000;
 
 ### 5.3. Subquery với IN
 
+**Cấu trúc tổng quát:**
+
+```sql
+SELECT cot1
+FROM ten_bang
+WHERE cot IN (SELECT cot_khac FROM ten_bang_khac WHERE dieu_kien);
+```
+
+**Giải thích:**
+- Truy vấn con trả về một **danh sách giá trị**, và `IN` kiểm tra xem giá trị của cột ở truy vấn ngoài có nằm trong danh sách đó hay không.
+
+**Ví dụ:**
+
 ```sql
 -- Lấy nhân viên thuộc các phòng ban có trưởng phòng
 SELECT ho_ten
@@ -284,7 +491,23 @@ WHERE phong_ban IN (
 
 ### 5.4. Correlated Subquery (truy vấn con tương quan)
 
-Loại subquery mà mỗi dòng của truy vấn ngoài sẽ chạy lại truy vấn con một lần, vì subquery tham chiếu đến cột của truy vấn ngoài.
+**Cấu trúc tổng quát:**
+
+```sql
+SELECT cot1, cot2
+FROM ten_bang bang_ngoai
+WHERE cot = (
+    SELECT ham_tong_hop(cot)
+    FROM ten_bang bang_trong
+    WHERE bang_trong.cot_chung = bang_ngoai.cot_chung
+);
+```
+
+**Giải thích:**
+- Khác với subquery thông thường (chỉ chạy 1 lần), correlated subquery **tham chiếu đến cột của truy vấn ngoài** (`bang_ngoai.cot_chung`), nên nó sẽ được **chạy lại một lần cho mỗi dòng** của truy vấn ngoài.
+- Thường dùng cho các bài toán so sánh "trong phạm vi nhóm của chính dòng đó", ví dụ: tìm giá trị lớn nhất trong từng nhóm.
+
+**Ví dụ:**
 
 ```sql
 -- Lấy nhân viên có lương cao nhất trong phòng ban của mình
@@ -301,15 +524,30 @@ WHERE luong = (
 
 ## 6. Thứ tự thực thi logic của truy vấn SQL
 
-Mặc dù ta **viết** SQL theo thứ tự `SELECT → FROM → WHERE → GROUP BY → HAVING → ORDER BY`, nhưng cơ sở dữ liệu lại **thực thi** theo thứ tự khác:
+**Cấu trúc tổng quát (thứ tự viết câu lệnh):**
+
+```sql
+SELECT cot1, cot2
+FROM ten_bang
+JOIN ...
+WHERE dieu_kien
+GROUP BY cot_nhom
+HAVING dieu_kien_nhom
+ORDER BY cot_sap_xep
+LIMIT so_dong;
+```
+
+**Giải thích:** Đây là thứ tự **viết** câu lệnh, nhưng cơ sở dữ liệu lại **thực thi** theo một trình tự khác — hiểu đúng trình tự này giúp giải thích được nhiều "quy tắc lạ" trong SQL (ví dụ vì sao không dùng được alias trong `WHERE`).
+
+**Thứ tự thực thi thực tế:**
 
 ```
-1. FROM        → Xác định bảng nguồn dữ liệu (bao gồm JOIN)
+1. FROM        → Xác định bảng nguồn dữ liệu
 2. JOIN / ON    → Kết hợp các bảng lại với nhau
 3. WHERE        → Lọc từng dòng dữ liệu thô
 4. GROUP BY     → Gom nhóm các dòng đã lọc
 5. HAVING       → Lọc trên kết quả đã nhóm
-6. SELECT       → Chọn cột / tính toán biểu thức, alias (AS)
+6. SELECT       → Chọn cột / tính toán biểu thức, đặt alias (AS)
 7. DISTINCT     → Loại bỏ dòng trùng lặp
 8. ORDER BY     → Sắp xếp kết quả
 9. LIMIT/OFFSET → Giới hạn số dòng trả về
@@ -344,7 +582,8 @@ Kết quả cuối cùng:
 | Kinh doanh | 2     |
 
 **Vì sao thứ tự này quan trọng?**
-- Đây là lý do vì sao ta **không thể dùng alias đặt trong `SELECT` để lọc trong `WHERE`** (vì `WHERE` chạy trước `SELECT`), nhưng **có thể dùng alias đó trong `ORDER BY`** (vì `ORDER BY` chạy sau `SELECT`).
+
+Vì `WHERE` chạy **trước** `SELECT`, nên không thể dùng alias được đặt trong `SELECT` để lọc trong `WHERE`. Ngược lại, `ORDER BY` chạy **sau** `SELECT` nên hoàn toàn có thể dùng alias đó.
 
 ```sql
 -- LỖI: không dùng được alias trong WHERE
@@ -360,3 +599,14 @@ ORDER BY luong_moi DESC;  -- ✅ Hợp lệ vì ORDER BY chạy sau SELECT
 
 ---
 
+## Tổng kết nhanh
+
+| Chủ đề            | Từ khóa chính                                            |
+|--------------------|-----------------------------------------------------------|
+| Thao tác dữ liệu   | `SELECT`, `INSERT`, `UPDATE`, `DELETE`                    |
+| Alias & lọc trùng  | `AS`, `DISTINCT`                                          |
+| Lọc dữ liệu         | `WHERE` (trước nhóm), `HAVING` (sau nhóm)                 |
+| Kết hợp dữ liệu     | `JOIN` (theo cột), `UNION` (theo dòng)                    |
+| Tổng hợp            | `COUNT`, `SUM`, `AVG`, `GROUP BY`                         |
+| Truy vấn lồng        | `Subquery` trong `WHERE`, `FROM`, `IN`, correlated subquery |
+| Thứ tự thực thi     | `FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY → LIMIT` |

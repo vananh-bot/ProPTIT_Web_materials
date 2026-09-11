@@ -1,4 +1,6 @@
-# BUỔI 3: SQL Cơ Bản
+# Tài liệu SQL Cơ Bản
+
+Tài liệu này tổng hợp các thao tác nền tảng trong SQL. Mỗi phần đều theo cấu trúc: **cú pháp tổng quát → giải thích ý nghĩa từng thành phần → ví dụ minh họa**. Chúng ta sẽ dùng chung 2 bảng dữ liệu mẫu xuyên suốt tài liệu:
 
 **Bảng `nhan_vien`**
 
@@ -410,111 +412,51 @@ Kết quả:
 
 ## 5. Truy vấn con (Subquery)
 
-### 5.1. Subquery trong WHERE
-
 **Cấu trúc tổng quát:**
 
 ```sql
 SELECT cot1, cot2
 FROM ten_bang
-WHERE cot SO_SANH (SELECT ham_tong_hop(cot) FROM ten_bang_khac);
-```
-
-**Giải thích:**
-- Truy vấn con (nằm trong dấu ngoặc đơn) được thực thi **trước**, trả về một giá trị đơn (hoặc danh sách giá trị) để truy vấn ngoài dùng làm điều kiện lọc.
-- Loại subquery này thường trả về **một giá trị duy nhất** khi dùng với toán tử so sánh (`=`, `>`, `<`...).
-
-**Ví dụ:**
-
-```sql
--- Lấy nhân viên có lương cao hơn mức lương trung bình
-SELECT ho_ten, luong
-FROM nhan_vien
-WHERE luong > (SELECT AVG(luong) FROM nhan_vien);
-```
-
-Truy vấn con `(SELECT AVG(luong) FROM nhan_vien)` được tính trước, trả về giá trị `16000000`, sau đó truy vấn ngoài sẽ lọc các nhân viên có lương lớn hơn giá trị đó.
-
-### 5.2. Subquery trong FROM (bảng tạm)
-
-**Cấu trúc tổng quát:**
-
-```sql
-SELECT cot1, cot2
-FROM (
-    SELECT ... FROM ten_bang ...
-) AS bang_tam
-WHERE dieu_kien;
-```
-
-**Giải thích:**
-- Truy vấn con được đặt ngay trong mệnh đề `FROM`, đóng vai trò như một **bảng tạm thời** (không lưu trữ thật) để truy vấn ngoài tiếp tục xử lý.
-- Bắt buộc phải đặt bí danh (`AS bang_tam`) cho bảng tạm này.
-
-**Ví dụ:**
-
-```sql
-SELECT phong_ban, luong_tb
-FROM (
-    SELECT phong_ban, AVG(luong) AS luong_tb
-    FROM nhan_vien
-    GROUP BY phong_ban
-) AS bang_tam
-WHERE luong_tb > 14000000;
-```
-
-### 5.3. Subquery với IN
-
-**Cấu trúc tổng quát:**
-
-```sql
-SELECT cot1
-FROM ten_bang
-WHERE cot IN (SELECT cot_khac FROM ten_bang_khac WHERE dieu_kien);
-```
-
-**Giải thích:**
-- Truy vấn con trả về một **danh sách giá trị**, và `IN` kiểm tra xem giá trị của cột ở truy vấn ngoài có nằm trong danh sách đó hay không.
-
-**Ví dụ:**
-
-```sql
--- Lấy nhân viên thuộc các phòng ban có trưởng phòng
-SELECT ho_ten
-FROM nhan_vien
-WHERE phong_ban IN (
-    SELECT ten_pb FROM phong_ban WHERE truong_phong IS NOT NULL
-);
-```
-
-### 5.4. Correlated Subquery (truy vấn con tương quan)
-
-**Cấu trúc tổng quát:**
-
-```sql
-SELECT cot1, cot2
-FROM ten_bang bang_ngoai
-WHERE cot = (
-    SELECT ham_tong_hop(cot)
-    FROM ten_bang bang_trong
-    WHERE bang_trong.cot_chung = bang_ngoai.cot_chung
+WHERE cot TOAN_TU (
+    SELECT ...
+    FROM ten_bang_khac
+    WHERE dieu_kien
 );
 ```
 
 **Giải thích:**
-- Khác với subquery thông thường (chỉ chạy 1 lần), correlated subquery **tham chiếu đến cột của truy vấn ngoài** (`bang_ngoai.cot_chung`), nên nó sẽ được **chạy lại một lần cho mỗi dòng** của truy vấn ngoài.
-- Thường dùng cho các bài toán so sánh "trong phạm vi nhóm của chính dòng đó", ví dụ: tìm giá trị lớn nhất trong từng nhóm.
+- Subquery (truy vấn con) là một câu `SELECT` được đặt lồng bên trong một câu `SELECT` khác (gọi là truy vấn ngoài). Truy vấn con luôn được thực thi trước để tạo ra dữ liệu trung gian, sau đó truy vấn ngoài mới dùng kết quả đó để tiếp tục xử lý.
+- `TOAN_TU` là toán tử nối kết quả subquery với truy vấn ngoài, tùy vào subquery trả về gì:
+  - Trả về **một giá trị duy nhất** → dùng toán tử so sánh: `=`, `>`, `<`...
+  - Trả về **một danh sách giá trị** → dùng `IN`
+  - Subquery cũng có thể đặt trong `FROM` (đóng vai trò một bảng tạm) thay vì trong `WHERE`.
+- Nếu subquery có tham chiếu đến cột của truy vấn ngoài (ví dụ `WHERE bang_trong.cot = bang_ngoai.cot`), nó được gọi là **correlated subquery** — loại này sẽ chạy lại một lần cho mỗi dòng của truy vấn ngoài, thay vì chỉ chạy một lần duy nhất.
 
-**Ví dụ:**
+**Ví dụ: Subquery trả về danh sách (dùng với IN):**
+
+**Employee**
+
+| name | department_id |
+| ---- | ------------: |
+| An   |             1 |
+| Bình |             2 |
+| Chi  |             3 |
+
+**Department**
+
+| department_id | department_name |
+| ------------: | --------------- |
+|             1 | IT              |
+|             2 | HR              |
+
 
 ```sql
--- Lấy nhân viên có lương cao nhất trong phòng ban của mình
-SELECT ho_ten, phong_ban, luong
-FROM nhan_vien nv1
-WHERE luong = (
-    SELECT MAX(luong)
-    FROM nhan_vien nv2
-    WHERE nv2.phong_ban = nv1.phong_ban
+--- Muốn tìm nhân viên thuộc phòng ban tồn tại trong bảng Department.
+SELECT name
+FROM Employee
+WHERE department_id IN (
+    SELECT department_id
+    FROM Department
 );
 ```
 

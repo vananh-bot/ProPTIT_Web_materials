@@ -184,9 +184,8 @@ Là một "giao diện" cho phép hai phần mềm giao tiếp với nhau mà kh
 **Ví dụ dễ hình dung:** API giống như **người phục vụ trong nhà hàng**. Bạn (client) không cần biết đầu bếp (server) nấu ăn thế nào, bạn chỉ cần gọi món qua người phục vụ (API), và người phục vụ mang món ăn (dữ liệu) ra cho bạn.
 
 ### 5.2. REST API là gì?
-RESTful API (Representational State Transfer API) là một phong cách kiến trúc và phương pháp tiếp cận được sử dụng rộng rãi trong việc xây dựng các dịch vụ web. RESTful API dựa trên giao thức HTTP để thực hiện các hoạt động CRUD (Create, Read, Update, Delete) trên các tài nguyên. Sự phổ biến của RESTful API đến từ tính đơn giản, dễ hiểu và khả năng mở rộng dễ dàng.
-
 ![alt text](image-2.png)
+RESTful API (Representational State Transfer API) là một phong cách kiến trúc và phương pháp tiếp cận được sử dụng rộng rãi trong việc xây dựng các dịch vụ web. RESTful API dựa trên giao thức HTTP để thực hiện các hoạt động CRUD (Create, Read, Update, Delete) trên các tài nguyên. Sự phổ biến của RESTful API đến từ tính đơn giản, dễ hiểu và khả năng mở rộng dễ dàng.
 
 **Lưu ý quan trọng:** REST là một **kiểu kiến trúc (architecture style)** quy định cách thiết kế API, còn HTTP là **giao thức** dùng để truyền dữ liệu. Chúng làm việc cùng nhau nhưng không phải là một khái niệm giống nhau.
 
@@ -362,6 +361,7 @@ public class Car {
 - Khó viết Unit Test (không thể thay `Engine` giả để test riêng `Car`)
 
 ### 6.2. Dependency Injection (DI) là gì?
+
 ![alt text](image-3.png)
 
 **DI (Dependency Injection - Tiêm phụ thuộc)** là một design pattern trong đó một object **nhận (được cung cấp)** các object phụ thuộc (dependency) từ bên ngoài, thay vì tự khởi tạo (`new`) chúng bên trong.

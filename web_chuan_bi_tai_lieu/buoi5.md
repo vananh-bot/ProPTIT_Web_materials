@@ -362,6 +362,7 @@ public class Car {
 - Khó viết Unit Test (không thể thay `Engine` giả để test riêng `Car`)
 
 ### 6.2. Dependency Injection (DI) là gì?
+![alt text](image-3.png)
 
 **DI (Dependency Injection - Tiêm phụ thuộc)** là một design pattern trong đó một object **nhận (được cung cấp)** các object phụ thuộc (dependency) từ bên ngoài, thay vì tự khởi tạo (`new`) chúng bên trong.
 
